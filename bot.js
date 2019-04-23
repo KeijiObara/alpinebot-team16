@@ -12,7 +12,10 @@ class MyBot {
      */
 
     memberJoined(activity) {
-        return ((activity.membersAdded.length !== 0 && (activity.membersAdded[0].id !== activity.recipient.id)));
+        const user = activity.membersAdded.find(member=> member.id != activity.recipient.id);
+        const isWebChat = activity.channelId == 'webchat';
+        //Webchat has a bug related to conversation update. This fix adjusts for that.
+        return  (user && !isWebChat) || (!user && isWebChat);
     }
     
     async onTurn(turnContext) {
