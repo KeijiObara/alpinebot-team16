@@ -9,9 +9,6 @@ const restify = require('restify');
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const { BotFrameworkAdapter } = require('botbuilder');
 
-// Import required bot configuration.
-const { BotConfiguration } = require('botframework-config');
-
 // This bot's main dialog.
 const { MyBot } = require('./bot');
 
@@ -36,20 +33,6 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
     console.log(`\nTo talk to your bot, open myChatBot.bot file in the Emulator`);
 });
 
-// .bot file path
-const BOT_FILE = path.join(__dirname, (process.env.botFilePath || ''));
-
-// Read bot configuration from .bot file.
-let botConfig;
-try {
-    botConfig = BotConfiguration.loadSync(BOT_FILE, process.env.botFileSecret);
-} catch (err) {
-    console.error(`\nError reading bot file. Please ensure you have valid botFilePath and botFileSecret set for your environment.`);
-    console.error(`\n - The botFileSecret is available under appsettings for your Azure Bot Service bot.`);
-    console.error(`\n - If you are running this bot locally, consider adding a .env file with botFilePath and botFileSecret.`);
-    console.error(`\n - See https://aka.ms/about-bot-file to learn more about .bot file its use and bot configuration.\n\n`);
-    process.exit();
-}
 
 // Get bot endpoint configuration by service name
 const endpointConfig = botConfig.findServiceByNameOrId(BOT_CONFIGURATION);
@@ -57,8 +40,8 @@ const endpointConfig = botConfig.findServiceByNameOrId(BOT_CONFIGURATION);
 // Create adapter.
 // See https://aka.ms/about-bot-adapter to learn more about .bot file its use and bot configuration.
 const adapter = new BotFrameworkAdapter({
-    appId: endpointConfig.appId || process.env.microsoftAppID,
-    appPassword: endpointConfig.appPassword || process.env.microsoftAppPassword
+    appId:  process.env.microsoftAppID,
+    appPassword:  process.env.microsoftAppPassword
 });
 
 // Catch-all for errors.
