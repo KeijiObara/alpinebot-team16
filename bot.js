@@ -22,9 +22,9 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
             if (button_list.includes(turnContext.activity.text)) {
-                await turnContext.sendActivity(`'${ turnContext.activity.text }'ボタンが押されました`);
+                await turnContext.sendActivity(`'${ turnContext.activity.text }'ボタンがクリックされました`);
             }else{
-                await turnContext.sendActivity(`もう一度おしえてください`);  
+                await turnContext.sendActivity(`'${ turnContext.activity.text }'は分かりません。ボタンから選んでください`);  
             }
         } else if(turnContext.activity.type === ActivityTypes.ConversationUpdate) {
                 if (this.memberJoined(turnContext.activity)) {
