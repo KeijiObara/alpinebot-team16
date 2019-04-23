@@ -43,24 +43,28 @@ class MyBot {
     async promptForMenu(step) {
         return step.prompt(MENU_PROMPT, {
             choices: button_list,
-//            prompt: "Do you have food to donate, do you need food, or are you contacting a food bank?",
-            retryPrompt: "I'm sorry, that wasn't a valid response. Please select one of the options"
+            prompt: "How would you like to explore the event?",
+            retryPrompt: "'${ turnContext.activity.text }'は分かりません。ボタンから選んでください`"
         });
     }
 
     async handleMenuResult(step) {
         switch (step.result.value) {
             case button_list[0]:
-//                return step.beginDialog(DONATE_FOOD_DIALOG);
-                return step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`)
+                //  return step.beginDialog(DONATE_FOOD_DIALOG);
+                await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
+                break;
             case button_list[1]:
-//                return step.beginDialog(FIND_FOOD_DIALOG);
-                return step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`)
+                // return step.beginDialog(FIND_FOOD_DIALOG);
+                await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
+                break;
             case button_list[2]:
- //               return step.beginDialog(CONTACT_DIALOG);
-                return step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`)
+                //  return step.beginDialog(CONTACT_DIALOG);
+                await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
+                break;
         }
-//        return step.next();
+        
+        return step.next();
     }
 
     async resetDialog(step) {
@@ -75,13 +79,13 @@ class MyBot {
         if (turnContext.activity.type === ActivityTypes.Message) {
             if (dialogContext.activeDialog) {
                 await dialogContext.continueDialog();
-                await dialogContext.beginDialog(MENU_DIALOG);
             } else {
                 await dialogContext.beginDialog(MENU_DIALOG);
             }
         } else if (turnContext.activity.type === ActivityTypes.ConversationUpdate) {
             if (this.memberJoined(turnContext.activity)) {
-                await turnContext.sendActivity(`Hey there! Welcome to the food bank bot. I'm here to help orchestrate the delivery of excess food to local food banks!`);
+                await turnContext.sendActivity(`Alpine Ski House音楽フェスティバルへようこそ！
+                イベントのガイドをします。知りたいことを教えてください。`);
                 await dialogContext.beginDialog(MENU_DIALOG);
             }
         }
