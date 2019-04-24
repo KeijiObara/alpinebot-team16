@@ -21,7 +21,7 @@ var route = "/knowledgebases/c1b9a674-2340-4808-9996-685bba53dd2a/generateAnswer
 // JSON format for passing question to service
 var question = {'question': 'Who are you?','top': 3};
 
-var getanswer = async () => {
+const getanswer = async () => {
 
     try{
         // Add an utterance
@@ -35,9 +35,10 @@ var getanswer = async () => {
             body: question
         };
 
-        var response = await request_as_promised.post(options);
+        var response = request_as_promised.post(options);
 
         console.log(response);
+        return await response
 
     } catch (err){
         console.log(err.statusCode);
@@ -46,5 +47,6 @@ var getanswer = async () => {
     }
 };
 
-getanswer();
+//getanswer();
 
+module.exports.getanswer = getanswer;
