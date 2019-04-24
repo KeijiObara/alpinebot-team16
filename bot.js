@@ -5,10 +5,12 @@
 //Cのincludeのようなもの(ライブラリの利用宣言)
 const { ActivityTypes, MessageFactory, TurnContext } = require('botbuilder');
 const { DialogSet, ChoicePrompt, WaterfallDialog } = require('botbuilder-dialogs');
+const { faqDialog } = require('./dialogs/FAQDialog');
 const button_list = ['FAQs', 'Band Search', 'Navigate']
 
 const MENU_PROMPT = 'menuPrompt';
 const MENU_DIALOG = 'menuDialog';
+const FAQ_DAILOG = 'faqDialog';
 //const DONATE_FOOD_DIALOG = 'donateFoodDialog';
 //const FIND_FOOD_DIALOG = 'findFoodDialog';
 //const CONTACT_DIALOG = 'contactDialog';
@@ -21,6 +23,7 @@ class MyBot {
         this.dialogState = this.conversationState.createProperty(DIALOG_STATE_PROPERTY);
         this.dialogs = new DialogSet(this.dialogState);
         this.dialogs.add(new ChoicePrompt(MENU_PROMPT));
+        this.dialogs.add(new faqDialog(FAQ_DAILOG));
 
         this.dialogs.add(new WaterfallDialog(MENU_DIALOG, [
             this.promptForMenu,
@@ -52,8 +55,9 @@ class MyBot {
         switch (step.result.value) {
             case button_list[0]:
                 //  return step.beginDialog(DONATE_FOOD_DIALOG);
-                await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
-                break;
+                //await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
+                return step.beginDialog(FAQ_DAILOG);
+                //break;
             case button_list[1]:
                 // return step.beginDialog(FIND_FOOD_DIALOG);
                 await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
@@ -106,7 +110,7 @@ class MyBot {
             await turnContext.sendActivity(`[${ turnContext.activity.type } event detected]`);
             */
         
-        var reply = MessageFactory.suggestedActions(button_list);
+       // var reply = MessageFactory.suggestedActions(button_list);
 //        await turnContext.sendActivity(reply);
     }
 }
