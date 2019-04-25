@@ -109,7 +109,7 @@ class MyBot {
             }
             else if (topIntent.intent == 'Navigate'){
                 let day =  results.entities && results.entities.day ? results.entities.day[0] : 'Any';
-                let genre =   results.entities && results.entities.genre ? results.entities.genre[0] : `All`;
+                let genre =   results.entities && results.entities.ganre ? results.entities.ganre[0] : `Any`;
 
                 if(day == 'Any' && genre == 'Any'){
                     day = null;

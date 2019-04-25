@@ -40,9 +40,9 @@ class navigateDialog extends ComponentDialog {
                 });
             },
             async function (step) {
-                /*if(step.options && step.options.genre){
+                if(step.options && step.options.genre){
                     return step.next();
-                }*/
+                }
                 step.values.day = step.result.value;
                 let filter = new QueryFilter().eq('day', step.values.day)
                 const resp = await azureSearch.indexes.use("azureblob-index").buildQuery()
@@ -86,6 +86,11 @@ class navigateDialog extends ComponentDialog {
                 }
                 else{
                     day = state.day;
+                }
+                genre = genre.charAt(0).toUpperCase() + genre.substring(1).toLowerCase();
+                day = day.charAt(0).toUpperCase() + day.substring(1).toLowerCase();
+                if(genre == 'Hip - hop'){
+                    genre = 'Hip-Hop';
                 }
                 let filter = new QueryFilter().eq('genre', genre)
                 if(genre == 'Any'){
