@@ -29,7 +29,7 @@ class bandSearchDialog extends ComponentDialog {
         // Define the conversation flow using a waterfall model.
         this.addDialog(new WaterfallDialog(dialogId, [
             async function (step) {
-                await step.context.sendActivity("")
+//                await step.context.sendActivity("")
 
                 return await step.prompt('textprompt',{
                    prompt: "What band would you like to search for?",
@@ -56,6 +56,14 @@ class bandSearchDialog extends ComponentDialog {
                         }))
                     )
                 })
+
+                if(cards.length == 0){
+                    return step.context.sendActivity("No search result found");
+                }else if(cards.length == 1){
+                    await step.context.sendActivity("Here is the show you looking for");
+                }else{
+                    await step.context.sendActivity("Here are shows you looking for");
+                }
 
                 let result = MessageFactory.carousel(cards);
                 return step.context.sendActivity(result);
