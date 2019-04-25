@@ -45,15 +45,15 @@ class bandSearchDialog extends ComponentDialog {
 
                 carouselData.forEach(item=>{
                     cards.push(
-                        CardFactory.adaptiveCard(that.renderCard([
-                            item.image,
-                            item.bandName,
-                            item.genre,
-                            item.day,
-                            item.startTime,
-                            item.stage,
-                            item.description
-                        ]))
+                        CardFactory.adaptiveCard(that.renderCard({
+                            image : item.image,
+                            bandName : item.bandName,
+                            genre : item.genre,
+                            day : item.day,
+                            startTime : item.startTime,
+                            stage : item.stage,
+                            descrip : item.description
+                        }))
                     )
                 })
 
@@ -66,6 +66,7 @@ class bandSearchDialog extends ComponentDialog {
 
     }
     renderCard(option){
+
         var card = ({
             "type": "AdaptiveCard",
             "body": [
@@ -75,18 +76,19 @@ class bandSearchDialog extends ComponentDialog {
             {
             "type": "Image",
             "style": "Person",
-            "url": "https://westeuropebotassets.blob.core.windows.net/assets/images/"&option[0],
+            "url": `https://westeuropebotassets.blob.core.windows.net/assets/images/${option.image}`,
             "size": "Stretch"
             },
             {
             "type": "TextBlock",
             "size": "Medium",
             "weight": "Bolder",
-            "text": option[1] &"|"& option[2] &"|"& option[3] &"|"& option[4] &"|"& option[5] 
+            "text": `${option.bandName} | ${option.genre} | ${option.day} | ${option.startTime} | ${option.stage}` ,
+            "wrap": true
             },
             {
             "type": "TextBlock",
-            "text": option[6],
+            "text": `${option.descrip}`,
             "wrap": true
             }
             ]
