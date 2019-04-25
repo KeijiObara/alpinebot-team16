@@ -31,12 +31,21 @@ class bandSearchDialog extends ComponentDialog {
             async function (step) {
 //                await step.context.sendActivity("")
 
+                if(step.options && step.options.BandName){
+                    return step.next();
+                }
+
                 return await step.prompt('textprompt',{
                    prompt: "What band would you like to search for?",
                 });
             },
             async function (step) {
-                var searchWord = step.result;
+                if(step.result == undefined){
+                    var searchWord = step.options.BandName;
+                }
+                else{
+                    var searchWord = step.result;
+                }
                 const resp = await azureSearch.indexes.use("azureblob-index").search({ search: searchWord, searchFields: "bandName" });
 
                 let carouselData = resp.result.value;

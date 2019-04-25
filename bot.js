@@ -103,9 +103,9 @@ class MyBot {
         default:
             const results = await luisRecognizer.recognize(step.context);
             const topIntent = results.luisResult.topScoringIntent;
-            if(topIntent.intent == 'Band Search'){
-                let name =  results.entities && results.entities.name ? results.entities.name[0] : 'Any';
-                return step.beginDialog(BANDSEARCH_DIALOG, {name});
+            if(topIntent.intent == 'BandSearch'){
+                let BandName =  results.entities && results.entities.BandName ? results.entities.BandName[0] : 'Any';
+                return step.beginDialog(BANDSEARCH_DIALOG, {BandName});
             }
             else if (topIntent.intent == 'Navigate'){
                 let day =  results.entities && results.entities.day ? results.entities.day[0] : 'Any';
@@ -121,8 +121,6 @@ class MyBot {
                 return step.beginDialog(FAQ_DIALOG);
             }       
         }   
-        
-        return step.next();
     }
 
     async resetDialog(step) {
@@ -135,6 +133,12 @@ class MyBot {
         const dialogContext = await this.dialogs.createContext(turnContext);
 
         if (turnContext.activity.type === ActivityTypes.Message) {
+
+            if(turnContext.activity.text.toLowerCase() =='cancel'){
+                await dialogContext.cancelAllDialogs()
+                await turnContext.sendActivity('OK, Canceling All Dialog')
+            }
+
             if (dialogContext.activeDialog) {
                 await dialogContext.continueDialog();
             } else {

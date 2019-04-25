@@ -27,6 +27,12 @@ class navigateDialog extends ComponentDialog {
 
         // Define the conversation flow using a waterfall model.
         this.addDialog(new WaterfallDialog(dialogId, [
+            async function(step){
+                if(step.options && (step.options.genre || step.options.day)){
+                    step.values.fromNlp = true;
+                }
+                return step.next();
+            },
             async function (step) {
                 //const validDonationDays = getValidDonationDays();
                 if(step.options && step.options.day){
@@ -44,10 +50,15 @@ class navigateDialog extends ComponentDialog {
                     return step.next();
                 }
                 step.values.day = step.result.value;
-                let filter = new QueryFilter().eq('day', step.values.day)
+                let filter = new QueryFilter();
+                if(step.values.day != "Any"){
+                    filter = new QueryFilter().eq('day', step.values.day);
+                }
+                
                 const resp = await azureSearch.indexes.use("azureblob-index").buildQuery()
                 .filter(filter)
                 .executeQuery();
+
                 const results = resp.result.value;
                 let genre_list = []
                 results.forEach(item=>
@@ -135,7 +146,12 @@ class navigateDialog extends ComponentDialog {
                 })
 
                 let result = MessageFactory.carousel(cards);
-                return step.context.sendActivity(result);
+                if(!step.values.fromNlp){
+                    await step.context.sendActivity(result);
+                    return step.context.sendActivity(`Btw you could have asked me 'what ${genre != 'Any' ? genre: ''} bands are playing${day != 'Any' ? ' on ' + day : ''}?'. `);
+                } else {
+                    return step.context.sendActivity(result);
+                }
         
             }            
         ]));
