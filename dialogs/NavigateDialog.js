@@ -29,6 +29,9 @@ class navigateDialog extends ComponentDialog {
         this.addDialog(new WaterfallDialog(dialogId, [
             async function (step) {
                 //const validDonationDays = getValidDonationDays();
+                if(step.options && step.options.day){
+                    return step.next();
+                }
 
                 return await step.prompt('choicePrompt', {
                     choices: ["Friday","Saturday","Sunday","Any"],
@@ -37,6 +40,9 @@ class navigateDialog extends ComponentDialog {
                 });
             },
             async function (step) {
+                /*if(step.options && step.options.genre){
+                    return step.next();
+                }*/
                 step.values.day = step.result.value;
                 let filter = new QueryFilter().eq('day', step.values.day)
                 const resp = await azureSearch.indexes.use("azureblob-index").buildQuery()
@@ -59,11 +65,28 @@ class navigateDialog extends ComponentDialog {
             },
 
             async function(step) {
+                /*
                 let genre = step.result.value;
                 let day = step.values.day;
                 genre = genre.charAt(0).toUpperCase() + genre.substring(1).toLowerCase();
                 day = day.charAt(0).toUpperCase() + day.substring(1).toLowerCase();
+                */
+                const state = step.values;
+                let genre=null;
+                let day=null;
+                if(step.options && step.options.genre && step.options.genre){
+                    genre = step.options.genre;
+                }
+                else{
+                    genre = step.result.value;
+                }
 
+                if( step.options && step.options.day && step.options.day){
+                    day = step.options.day;
+                }
+                else{
+                    day = state.day;
+                }
                 let filter = new QueryFilter().eq('genre', genre)
                 if(genre == 'Any'){
                     filter = new QueryFilter().eq('day', day);
