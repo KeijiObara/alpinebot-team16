@@ -7,12 +7,14 @@ const { ActivityTypes, MessageFactory, TurnContext } = require('botbuilder');
 const { DialogSet, ChoicePrompt, WaterfallDialog } = require('botbuilder-dialogs');
 const { faqDialog } = require('./dialogs/FAQDialog');
 const { bandSearchDialog } = require('./dialogs/BandSearchDialog');
+const { navigateDialog } = require('./dialogs/NavigateDialog');
 const button_list = ['FAQs', 'Band Search', 'Navigate']
 
 const MENU_PROMPT = 'menuPrompt';
 const MENU_DIALOG = 'menuDialog';
 const FAQ_DAILOG = 'faqDialog';
 const BANDSEARCH_DAILOG = 'bandSearchDialog';
+const NAVIGATE_DIALOG = 'navigateDialog'
 //const DONATE_FOOD_DIALOG = 'donateFoodDialog';
 //const FIND_FOOD_DIALOG = 'findFoodDialog';
 //const CONTACT_DIALOG = 'contactDialog';
@@ -27,6 +29,7 @@ class MyBot {
         this.dialogs.add(new ChoicePrompt(MENU_PROMPT));
         this.dialogs.add(new faqDialog(FAQ_DAILOG));
         this.dialogs.add(new bandSearchDialog(BANDSEARCH_DAILOG));
+        this.dialogs.add(new navigateDialog(NAVIGATE_DIALOG));
 
         this.dialogs.add(new WaterfallDialog(MENU_DIALOG, [
             this.promptForMenu,
@@ -67,9 +70,9 @@ class MyBot {
                 //await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
                 //break;
             case button_list[2]:
-                //  return step.beginDialog(CONTACT_DIALOG);
-                await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
-                break;
+                return step.beginDialog(NAVIGATE_DIALOG);
+                //await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
+                //break;
         }
         
         return step.next();

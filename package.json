@@ -21,7 +21,7 @@
         "botbuilder-ai": "^4.3.4",
         "botbuilder-dialogs": "^4.3.4",
         "botframework-config": "^4.2.0",
-        "dotenv": "^6.1.0",
+        "dotenv": "^6.2.0",
         "memorystorage": "^0.11.0",
         "request": "^2.88.0",
         "request-promise": "^4.2.4",
