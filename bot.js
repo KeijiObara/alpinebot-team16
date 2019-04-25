@@ -13,8 +13,8 @@ const { LuisRecognizer } = require('botbuilder-ai');
 
 const MENU_PROMPT = 'menuPrompt';
 const MENU_DIALOG = 'menuDialog';
-const FAQ_DAILOG = 'faqDialog';
-const BANDSEARCH_DAILOG = 'bandSearchDialog';
+const FAQ_DIALOG = 'faqDialog';
+const BANDSEARCH_DIALOG = 'bandSearchDialog';
 const NAVIGATE_DIALOG = 'navigateDialog'
 //const DONATE_FOOD_DIALOG = 'donateFoodDialog';
 //const FIND_FOOD_DIALOG = 'findFoodDialog';
@@ -28,8 +28,8 @@ class MyBot {
         this.dialogState = this.conversationState.createProperty(DIALOG_STATE_PROPERTY);
         this.dialogs = new DialogSet(this.dialogState);
         this.dialogs.add(new TextPrompt(MENU_PROMPT));
-        this.dialogs.add(new faqDialog(FAQ_DAILOG));
-        this.dialogs.add(new bandSearchDialog(BANDSEARCH_DAILOG));
+        this.dialogs.add(new faqDialog(FAQ_DIALOG));
+        this.dialogs.add(new bandSearchDialog(BANDSEARCH_DIALOG));
         this.dialogs.add(new navigateDialog(NAVIGATE_DIALOG));
         this.dialogs.add(new WaterfallDialog(MENU_DIALOG, [
             this.promptForMenu,
@@ -80,11 +80,11 @@ class MyBot {
             case button_list[0]:
                 //  return step.beginDialog(DONATE_FOOD_DIALOG);
                 //await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
-                return step.beginDialog(FAQ_DAILOG);
+                return step.beginDialog(FAQ_DIALOG);
                 //break;
             case button_list[1]:
                 // return step.beginDialog(FIND_FOOD_DIALOG);
-                return step.beginDialog(BANDSEARCH_DAILOG);
+                return step.beginDialog(BANDSEARCH_DIALOG);
                 //await step.context.sendActivity(`'${ step.result.value }'ボタンがクリックされました`);
                 //break;
             case button_list[2]:
@@ -94,18 +94,18 @@ class MyBot {
         }
         */
        switch (step.result) {
-        case "FAQs":
+        case button_list[0]:
             return step.beginDialog(FAQ_DIALOG);
-        case "Product Search":
-            return step.beginDialog(BAND_SEARCH_DIALOG);
-        case "Explore Products":
+        case button_list[1]:
+            return step.beginDialog(BANDSEARCH_DIALOG);
+        case button_list[2]:
             return step.beginDialog(NAVIGATE_DIALOG);
         default:
             const results = await luisRecognizer.recognize(step.context);
             const topIntent = results.luisResult.topScoringIntent;
             if(topIntent.intent == 'Band Search'){
                 let name =  results.entities && results.entities.name ? results.entities.name[0] : 'Any';
-                return step.beginDialog(BAND_SEARCH_DIALOG, {name});
+                return step.beginDialog(BANDSEARCH_DIALOG, {name});
             }
             else if (topIntent.intent == 'Navigate'){
                 let day =  results.entities && results.entities.day ? results.entities.day[0] : 'Any';
